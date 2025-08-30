@@ -28,34 +28,27 @@ else
 fi
 
 # Install Claude CLI and SuperClaude Framework
-SUPERCLAUDE_DIR="$HOME/SuperClaude"
-if [ ! -d "$SUPERCLAUDE_DIR" ]; then
+if ! command -v SuperClaude &> /dev/null; then
+    echo "Installing pipx..."
+    pipx ensurepath
+    export PATH="$HOME/.local/bin:$PATH"
+
     echo "Installing Claude CLI..."
     npm install -g @anthropic-ai/claude-code
-    # curl -fsSL https://claude.ai/install.sh | bash
+    claude login
 
     echo "Installing SuperClaude Framework dependencies..."
-    git clone https://github.com/SuperClaude-Org/SuperClaude_Framework.git "$SUPERCLAUDE_DIR"
-    cd "$SUPERCLAUDE_DIR"
-    uv sync
+    pipx install SuperClaude
+    echo -e "\n\n\n\n" | SuperClaude install --force --yes
 
-    echo "Installing SuperClaude with developer profile..."
-    mkdir -p ~/.claude
-    touch ~/.claude/CLAUDE.md
-    python3 -m SuperClaude install --profile developer --yes
+    echo "Installing SuperGemini Framework dependencies..."
+    pipx install SuperGemini
+    echo -e "\n" | SuperGemini install --force --yes
 
     echo "SuperClaude Framework setup completed"
 else
-    echo "SuperClaude Framework already exists at $SUPERCLAUDE_DIR"
+    pipx upgrade SuperClaude
     echo "Updating SuperClaude Framework..."
-    cd "$SUPERCLAUDE_DIR"
-    git pull origin master
-    uv sync
-
-    echo "Reinstalling SuperClaude with developer profile..."
-    mkdir -p ~/.claude
-    touch ~/.claude/CLAUDE.md
-    echo -e "y\ny" | python3 -m SuperClaude install --profile developer
 fi
 
 # Install Claudia
