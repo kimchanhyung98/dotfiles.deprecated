@@ -43,8 +43,7 @@ brew "yarn"
 # AI Tools
 brew "gemini-cli"
 cask "cursor"
-cask "claude"
-brew "claude-squad"
+# cask "claude"
 brew "ollama"
 cask "windsurf"
 

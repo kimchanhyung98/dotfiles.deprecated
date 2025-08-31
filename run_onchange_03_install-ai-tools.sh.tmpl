@@ -2,73 +2,94 @@
 
 set -e
 
-echo "03. Installing AI tools..."
+echo "03. installing AI tools"
 
-# Install Bun (JavaScript runtime and package manager)
-if ! command -v bun &> /dev/null; then
-    echo "Installing Bun..."
+# Install claude cli
+if command -v claude &> /dev/null; then
+    echo "[claude-cli][update] start"
+    npm update -g @anthropic-ai/claude-code || true
+    echo "[claude-cli][update] done"
+else
+    echo "[claude-cli][install] start"
+    npm install -g @anthropic-ai/claude-code || true
+    echo "[claude-cli][install] done"
+fi
+claude login || true
+
+# Install pipx
+echo "[pipx][install] start"
+pipx ensurepath
+export PATH="$HOME/.local/bin:$PATH"
+source "$HOME/.zshrc"
+echo "[pipx][install] done"
+
+# Install SuperClaude
+if command -v SuperClaude &> /dev/null; then
+    echo "[superclaude][upgrade] start"
+    pipx upgrade SuperClaude || true
+    echo "[superclaude][upgrade] done"
+else
+    echo "[superclaude][install] dependencies"
+    pipx install SuperClaude || true
+    echo -e "\n\n\n\n" | SuperClaude install --force --yes || true
+fi
+
+# Install SuperGemini
+if command -v SuperGemini &> /dev/null; then
+    echo "[supergemini][upgrade] start"
+    pipx upgrade SuperGemini || true
+    echo "[supergemini][upgrade] done"
+else
+    echo "[supergemini][install] dependencies"
+    pipx install SuperGemini || true
+    echo -e "\n" | SuperGemini install --force --yes || true
+fi
+
+# Install bun
+if command -v bun &> /dev/null; then
+    echo "[bun][update] start"
+    bun update
+    echo "[bun][update] done"
+else
+    echo "[bun][install] start"
     curl -fsSL https://bun.sh/install | bash
-    
-    # Add bun to PATH for current session
+    # Ensure bun PATH for current session
     export PATH="$HOME/.bun/bin:$PATH"
     source "$HOME/.zshrc"
-
-    echo "Bun installed successfully"
-else
-    echo "Bun already installed"
+    echo "[bun][install] done"
 fi
 
-# Install Augment AI tool (auggie)
-if ! command -v auggie &> /dev/null; then
-    echo "Installing Augment AI tool (auggie)..."
-    npm install -g @augmentcode/auggie
-    echo "Auggie installed successfully"
-else
-    echo "Auggie already installed"
-fi
+# Install opcode (claudia)
+OPCODE_DIR="$HOME/opcode"
+if [ ! -d "$OPCODE_DIR" ]; then
+    echo "[opcode][install] clone repository"
+    git clone https://github.com/getAsterisk/opcode.git "$OPCODE_DIR"
 
-# Install Claude CLI and SuperClaude Framework
-if ! command -v SuperClaude &> /dev/null; then
-    echo "Installing pipx..."
-    pipx ensurepath
-    export PATH="$HOME/.local/bin:$PATH"
-
-    echo "Installing Claude CLI..."
-    npm install -g @anthropic-ai/claude-code
-    claude login
-
-    echo "Installing SuperClaude Framework dependencies..."
-    pipx install SuperClaude
-    echo -e "\n\n\n\n" | SuperClaude install --force --yes
-
-    echo "Installing SuperGemini Framework dependencies..."
-    pipx install SuperGemini
-    echo -e "\n" | SuperGemini install --force --yes
-
-    echo "SuperClaude Framework setup completed"
-else
-    pipx upgrade SuperClaude
-    echo "Updating SuperClaude Framework..."
-fi
-
-# Install Claudia
-CLAUDIA_DIR="$HOME/claudia"
-if [ ! -d "$CLAUDIA_DIR" ]; then
-    echo "Cloning Claudia repository..."
-    git clone https://github.com/getAsterisk/claudia.git "$CLAUDIA_DIR"
-    
-    echo "Installing Claudia dependencies..."
-    cd "$CLAUDIA_DIR"
+    echo "[opcode][install] install dependencies"
+    cd "$OPCODE_DIR"
     bun install
-    
-    echo "Claudia setup completed"
+    bun run tauri build
+    echo "[opcode][install] setup completed"
 else
-    echo "Claudia already exists at $CLAUDIA_DIR"
-    echo "Updating Claudia..."
-    cd "$CLAUDIA_DIR"
-    git pull origin main
+    echo "[opcode][update] repository"
+    cd "$OPCODE_DIR"
+    git pull --ff-only || true
+
+    echo "[opcode][update] dependencies"
     bun install
+    bun run tauri build
+    echo "[opcode][update] setup completed"
 fi
 
-echo "AI tools installation completed"
-echo "Please restart your terminal or run 'source ~/.zshrc' to update your PATH"
+# Install auggie (augment cli)
+if command -v auggie &> /dev/null; then
+    echo "[auggie][update] start"
+    npm update -g @augmentcode/auggie || true
+    echo "[auggie][update] done"
+else
+    echo "[auggie][install] start"
+    npm install -g @augmentcode/auggie || true
+    echo "[auggie][install] done"
+fi
+
+echo "03. AI tools installation completed"

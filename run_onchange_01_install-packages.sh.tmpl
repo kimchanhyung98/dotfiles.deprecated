@@ -2,35 +2,23 @@
 
 set -e
 
-echo "01. Installing packages..."
+echo "01. install packages"
 
-# Install Xcode Command Line Tools if not present
+# Require Xcode Command Line Tools
+echo "[xcode][check] command line tools"
 if ! xcode-select -p &> /dev/null; then
-    echo "Installing Xcode Command Line Tools..."
+    echo "[xcode][install] command line tools not found; install them before running" 1>&2
     xcode-select --install
-    echo "Please complete the Xcode Command Line Tools installation and run this script again."
-    exit 0
-else
-    echo "Xcode Command Line Tools already installed"
 fi
 
-# Install Homebrew if not present
-if ! command -v brew &> /dev/null; then
-    echo "Installing Homebrew..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    
-    # Setup Homebrew environment for Apple Silicon
-    if [[ $(uname -m) == "arm64" ]]; then
-        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-        eval "$(/opt/homebrew/bin/brew shellenv)"
-    fi
-else
-    echo "Homebrew already installed"
-fi
+# Ensure brew environment in current session
+eval "$(brew shellenv)"
 
-# Update Homebrew
-echo "Updating Homebrew..."
+# Update and upgrade Homebrew
+echo "[brew][update] start"
 brew update
+brew upgrade || true
+brew upgrade --cask || true
 
 # Install packages using Brewfile
 echo "Installing packages from Brewfile..."
@@ -72,14 +60,15 @@ rm -f /tmp/brew_install.exp
 
 # Install Oh My Zsh if not present
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
-    echo "Installing Oh My Zsh..."
+    echo "[oh-my-zsh][install] start"
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 else
-    echo "Oh My Zsh already installed"
+    echo "[oh-my-zsh][update] start"
+    git -C "$HOME/.oh-my-zsh" pull --ff-only || true
 fi
 
 # Install Zsh plugins
-echo "Installing Zsh plugins..."
+echo "[zsh][install] plugins"
 
 # zsh-autosuggestions
 if [ ! -d "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" ]; then
@@ -91,5 +80,4 @@ if [ ! -d "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" ]
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 fi
 
-echo "Package installation completed"
-echo "Please restart your terminal to ensure all changes take effect"
+echo "01. package installation completed"

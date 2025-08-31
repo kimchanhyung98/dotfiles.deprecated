@@ -2,48 +2,47 @@
 
 set -e
 
-echo "02. Configuring macOS system settings..."
+echo "02. configure system settings"
 
 # Dock settings
-echo "Configuring Dock..."
+echo "[dock][config] settings"
 defaults write com.apple.dock autohide -bool true
 defaults write com.apple.dock magnification -bool true
 defaults write com.apple.dock tilesize -int 48
 defaults write com.apple.dock largesize -int 64
 
 # Finder settings
-echo "Configuring Finder..."
+echo "[finder][config] settings"
 defaults write com.apple.finder ShowPathbar -bool true
 defaults write com.apple.finder ShowStatusBar -bool true
 defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
 # Keyboard settings
-echo "Configuring Keyboard..."
+echo "[keyboard][config] settings"
 defaults write NSGlobalDomain KeyRepeat -int 2
 defaults write NSGlobalDomain InitialKeyRepeat -int 15
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
 # Trackpad settings
-echo "Configuring Trackpad..."
+echo "[trackpad][config] settings"
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
 # Screenshots settings
-echo "Configuring Screenshots..."
+echo "[screenshots][config] settings"
 defaults write com.apple.screencapture location -string "${HOME}/Desktop"
 defaults write com.apple.screencapture type -string "png"
 defaults write com.apple.screencapture disable-shadow -bool true
 
 # Menu bar settings
-echo "Configuring Menu Bar..."
+echo "[menu-bar][config] settings"
 defaults write com.apple.menuextra.clock DateFormat -string "EEE MMM d  h:mm a"
 
 # Restart affected applications
-echo "Restarting affected applications..."
+echo "[macos][restart] affected applications"
 killall Dock 2>/dev/null || true
 killall Finder 2>/dev/null || true
 killall SystemUIServer 2>/dev/null || true
 
-echo "macOS system settings configured successfully"
-echo "Some changes may require a logout/login to take full effect"
+echo "02. system settings configured successfully"
