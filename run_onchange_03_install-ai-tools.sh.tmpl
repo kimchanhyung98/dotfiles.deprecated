@@ -31,7 +31,8 @@ if command -v SuperClaude &> /dev/null; then
 else
     echo "[superclaude][install] dependencies"
     pipx install SuperClaude || true
-    echo -e "\n\n\n\n" | SuperClaude install --force --yes || true
+    SuperClaude install --force --yes || true
+    echo "[superclaude][install] done"
 fi
 
 # Install SuperGemini
@@ -42,7 +43,8 @@ if command -v SuperGemini &> /dev/null; then
 else
     echo "[supergemini][install] dependencies"
     pipx install SuperGemini || true
-    echo -e "\n" | SuperGemini install --force --yes || true
+    SuperGemini install --force --yes || true
+    echo "[supergemini][install] done"
 fi
 
 # Install bun
