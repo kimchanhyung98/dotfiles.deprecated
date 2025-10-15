@@ -40,12 +40,15 @@ brew "watchman"
 brew "xcodes"
 brew "yarn"
 
-# AI Tools
-brew "gemini-cli"
-cask "cursor"
-# cask "claude"
+# AI
+# - Install with npm.
+# cask "claude-code"
+# brew "codex"
+# brew "gemini-cli"
+
 brew "ollama"
-cask "windsurf"
+# cask "cursor"
+# cask "windsurf"
 
 # Development Apps
 cask "docker"
@@ -54,15 +57,16 @@ cask "flutter"
 cask "github"
 cask "postman"
 cask "proxyman"
-cask "visual-studio-code"
+# cask "visual-studio-code"
 
 # Jetbrains
-cask "jetbrains-toolbox"
-cask "android-studio"
-cask "pycharm"
-cask "goland"
-cask "phpstorm"
-cask "datagrip"
+# - Visit the [Jetbrains](https://www.jetbrains.com/toolbox-app) and install it.
+# cask "jetbrains-toolbox"
+# cask "android-studio"
+# cask "pycharm"
+# cask "goland"
+# cask "phpstorm"
+# cask "datagrip"
 
 # Other Apps
 cask "appcleaner"
