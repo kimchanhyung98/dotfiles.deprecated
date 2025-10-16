@@ -1,11 +1,11 @@
 {{- $name := promptStringOnce . "name" "Full name" -}}
 {{- $email := promptStringOnce . "email" "Email address" -}}
-{{- $sudoPassword := promptStringOnce . "sudoPassword" "관리자 비밀번호 (Cask 앱 설치용)" -}}
+{{- $password := promptStringOnce . "password" "Sudo password" -}}
 
 [data]
     name = {{ $name | quote }}
     email = {{ $email | quote }}
-    sudoPassword = {{ $sudoPassword | quote }}
+    password = {{ $password | quote }}
 
 [edit]
     command = "code"
