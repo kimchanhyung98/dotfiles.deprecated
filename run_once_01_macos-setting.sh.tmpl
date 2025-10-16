@@ -1,0 +1,39 @@
+#!/bin/bash
+
+set -e
+
+echo "[macos-setting]"
+
+# 1. Xcode 설치
+if ! xcode-select -p >/dev/null 2>&1; then
+  xcode-select --install || true
+  echo "install xcode"
+fi
+
+# 2. macOS 기본 설정 적용
+# Dock
+defaults write com.apple.dock autohide -bool true
+defaults write com.apple.dock magnification -bool true
+defaults write com.apple.dock tilesize -int 48
+defaults write com.apple.dock largesize -int 64
+# Finder
+defaults write com.apple.finder ShowPathbar -bool true
+defaults write com.apple.finder ShowStatusBar -bool true
+defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+# Keyboard
+defaults write NSGlobalDomain KeyRepeat -int 2
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
+defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+# Trackpad
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+# Screenshots
+defaults write com.apple.screencapture location -string "${HOME}/Desktop"
+defaults write com.apple.screencapture type -string "png"
+defaults write com.apple.screencapture disable-shadow -bool true
+# Menu bar
+defaults write com.apple.menuextra.clock DateFormat -string "EEE MMM d  h:mm a"
+after() { killall Dock Finder SystemUIServer 2>/dev/null || true; }; after
+
+echo "[macos-setting] done"
