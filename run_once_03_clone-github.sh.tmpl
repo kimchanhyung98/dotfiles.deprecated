@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e
+
+echo "[clone-github]"
+
+# 1) 작업 디렉터리
+mkdir -p "$HOME/Documents/GitHub"
+cd "$HOME/Documents/GitHub"
+
+# 2) 공개 저장소 clone
+gh repo list {{ .name }} --public | while read -r repo _; do
+  if [ -d "$repo" ]; then
+    echo "pull $repo"
+    (cd "$repo" && git pull)
+  else
+    echo "clone $repo"
+    gh repo clone "$repo"
+  fi
+done
+
+echo "[clone-github] done"
