@@ -10,30 +10,72 @@ if ! xcode-select -p >/dev/null 2>&1; then
   echo "install xcode"
 fi
 
-# 2. macOS 기본 설정 적용
+# 2. macOS 설정 수정
+
 # Dock
+# - Dock 자동 숨기기 활성화
 defaults write com.apple.dock autohide -bool true
+# - Dock 돋보기 효과 활성화
 defaults write com.apple.dock magnification -bool true
+# - Dock 아이콘 기본 크기 설정
 defaults write com.apple.dock tilesize -int 48
+# - Dock 아이콘 확대 크기 설정
 defaults write com.apple.dock largesize -int 64
+# - Dock 최근 사용 앱 표시 비활성화
+defaults write com.apple.dock show-recents -bool false
+
 # Finder
+# - 경로 막대 표시
 defaults write com.apple.finder ShowPathbar -bool true
+# - 상태 막대 표시
 defaults write com.apple.finder ShowStatusBar -bool true
+# - 기본 검색 범위를 현재 폴더로
 defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+# - 확장자 변경 경고 비활성화
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+# - 모든 파일 확장자 표시
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+# - Finder 제목 표시줄에 전체 경로 표시
+defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+
 # Keyboard
+# - 키 반복 속도 빠르게
 defaults write NSGlobalDomain KeyRepeat -int 2
+# - 키 반복 시작 지연 단축
 defaults write NSGlobalDomain InitialKeyRepeat -int 15
+# - 누르고 있으면 팝오버(PressAndHold) 비활성화
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+# - 맞춤법 자동 수정 비활성화
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+# - 자동 대문자 시작 비활성화
+defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+# - 스페이스 두 번에 마침표 입력 비활성화
+defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
+# - 스마트 따옴표(곡선 따옴표) 비활성화
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+# - 스마트 대시(—) 자동 치환 비활성화
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+# - 텍스트 자동 완성 비활성화
+defaults write NSGlobalDomain NSAutomaticTextCompletionEnabled -bool false
+
 # Trackpad
+# - 탭하여 클릭 활성화
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+# - 탭하여 클릭(글로벌) 활성화
 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+
 # Screenshots
+# - 스크린샷 저장 경로 지정
 defaults write com.apple.screencapture location -string "${HOME}/Desktop"
+# - 스크린샷 포맷 png로 설정
 defaults write com.apple.screencapture type -string "png"
+# - 스크린샷 그림자 비활성화
 defaults write com.apple.screencapture disable-shadow -bool true
+
 # Menu bar
-defaults write com.apple.menuextra.clock DateFormat -string "EEE MMM d  h:mm a"
+# - 메뉴 막대 시계 포맷 지정: "MM.dd EEE, kk:mm" (예: 10.18 토, 24:00)
+defaults write com.apple.menuextra.clock DateFormat -string "MM.dd EEE, HH:mm"
+
 after() { killall Dock Finder SystemUIServer 2>/dev/null || true; }; after
 
 echo "[macos-setting] done"
