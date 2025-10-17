@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e
+
+echo "[install-brewfile]"
+
+# 1) expect 확인 및 설치
+if ! command -v expect >/dev/null 2>&1; then
+  brew install expect
+fi
+
+# 2) 비밀번호 자동 입력 스크립트 생성 및 실행
+cat > /tmp/brew_install.exp << 'EOF'
+#!/usr/bin/expect -f
+set timeout -1
+set password "{{ .password }}"
+spawn brew bundle --file={{ .chezmoi.sourceDir }}/Brewfile
+expect {
+    "Password:" { send "$password\r" exp_continue }
+    "password for" { send "$password\r" exp_continue }
+    eof
+}
+EOF
+
+chmod +x /tmp/brew_install.exp
+/tmp/brew_install.exp
+rm -f /tmp/brew_install.exp
+
+echo "[install-brewfile] done"
