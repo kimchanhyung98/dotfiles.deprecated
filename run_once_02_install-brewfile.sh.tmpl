@@ -16,8 +16,8 @@ set timeout -1
 set password "{{ .password }}"
 spawn brew bundle --file={{ .chezmoi.sourceDir }}/Brewfile
 expect {
-    "Password:" { send "$password\r" exp_continue }
-    "password for" { send "$password\r" exp_continue }
+    "Password:" { send -- "$password\r"; exp_continue }
+    "password for" { send -- "$password\r"; exp_continue }
     eof
 }
 EOF
