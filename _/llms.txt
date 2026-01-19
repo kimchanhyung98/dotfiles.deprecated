@@ -1,0 +1,306 @@
+# kimchanhyung98/dotfiles
+
+> macOS Tahoe dotfiles managed with chezmoi
+
+## 프로젝트 개요
+
+macOS 개발 환경을 자동으로 구성하고 관리하는 dotfiles 저장소입니다.
+chezmoi를 사용하여 설정 파일들을 관리하고, 자동화된 스크립트를 통해 개발 환경을 일관되게 유지합니다.
+
+## 핵심 구성 요소
+
+### 1. 패키지 관리 (Brewfile)
+- **시스템 도구**: bash, curl, gh, gnupg, grep, tmux, tree, wget, zsh
+- **프로그래밍 언어**: dotnet, go, node, python, ruby, rust, php, java
+- **개발 도구**: git, npm, pipx, docker, vim, awscli, gcloud-cli
+- **AI 도구**: ollama, claude-code, codex, gemini-cli
+- **응용 프로그램**: iterm2, docker, figma, postman, chrome, rectangle, slack
+
+### 2. Shell 설정
+**Zsh (.zshrc)**:
+- Oh My Zsh 프레임워크 사용 (robbyrussell 테마)
+- 플러그인: git, brew, macos, docker, node, python, rust, golang, zsh-autosuggestions, zsh-syntax-highlighting
+- History 설정: 10000 라인, 중복 제거, 공유 모드
+- 경로 설정: Homebrew, local bin, Python, Go, Rust, Bun
+- Git/Docker 별칭 다수 포함
+- Claudia 개발 별칭 (claudia-dev, claudia-build)
+
+**Bash (.bashrc)**:
+- 기본 PATH 설정 및 Homebrew 통합
+- 기본 별칭 (ll, la, grep 컬러)
+
+### 3. Git 설정 (.gitconfig)
+- 사용자 정보 템플릿 (name, email)
+- 기본 브랜치: main
+- VSCode를 merge/diff 도구로 사용
+- 다양한 git 별칭 (st, lg, cleanup 등)
+- Git LFS 필터 설정
+- 컬러 설정 최적화
+
+### 4. Vim 설정 (.vimrc)
+- Syntax highlighting, line numbers
+- 4 space 들여쓰기
+- 검색 하이라이트, 증분 검색
+- 마우스 지원, 백스페이스 동작 개선
+
+### 5. macOS 시스템 설정 (.macos)
+**Dock**:
+- 자동 숨기기, 돋보기 효과
+- 아이콘 크기: 48px (기본), 64px (확대)
+- 최근 사용 앱 표시 비활성화
+
+**Finder**:
+- 경로 막대, 상태 막대 표시
+- 모든 확장자 표시
+- 제목에 전체 경로 표시
+- 확장자 변경 경고 비활성화
+
+**Keyboard**:
+- 빠른 키 반복 (KeyRepeat: 2, InitialKeyRepeat: 15)
+- 자동 수정, 자동 대문자, 스마트 따옴표 모두 비활성화
+
+**Trackpad**:
+- 탭하여 클릭 활성화
+
+**Screenshots**:
+- 저장 위치: Desktop
+- 포맷: PNG, 그림자 비활성화
+
+**Menu Bar**:
+- 시계 포맷: "MM.dd EEE, HH:mm"
+
+### 6. 자동 설치 스크립트
+
+**실행 순서**:
+1. `run_once_01_macos-setting.sh`: Xcode 설치 및 macOS 시스템 설정
+2. `run_once_02_install-brewfile.sh`: Homebrew 패키지 설치
+3. `run_once_03_clone-github.sh`: GitHub 저장소 복제 (~/Documents/GitHub)
+4. `run_once_04_ohmyzsh-setting.sh`: Oh My Zsh 및 플러그인 설치
+5. `run_once_05_install-runtime-base.sh`: Bun 런타임 설치
+6. `run_once_06_install-ai-npm.sh`: npm 기반 AI CLI 도구 설치 (auggie, claude, codex, gemini)
+7. `run_once_07_install-ai-pipx.sh`: pipx 기반 AI 도구 설치 (SuperClaude, SuperGemini)
+8. `run_once_08_install-ai-others.sh`: 기타 AI 도구 설치
+9. `run_once_99_validate-installation.sh`: 설치 검증
+
+### 7. 설치 검증
+`run_once_99_validate-installation.sh`는 다음을 확인:
+- Oh My Zsh 및 플러그인 디렉토리
+- 런타임 및 CLI 도구 (pipx, bun, auggie, claude, codex, gemini, SuperClaude, SuperGemini)
+- GitHub 복제 디렉토리 (~Documents/GitHub)
+- Opcode 디렉토리 (~/opcode)
+- macOS defaults 설정값
+
+## 파일 구조
+
+```
+dotfiles/
+├── README.md                              # 설치 가이드
+├── Brewfile                               # Homebrew 패키지 목록
+├── .chezmoi.toml.tmpl                     # chezmoi 설정 (name, email, password)
+├── .chezmoiignore                         # chezmoi 무시 파일
+├── .gitignore                             # Git 무시 파일
+├── .macos                                 # macOS 시스템 설정 스크립트
+├── dot_bashrc                             # Bash 설정
+├── dot_gitconfig.tmpl                     # Git 설정 템플릿
+├── dot_gitignore_global                   # 전역 Git 무시 파일
+├── dot_vimrc                              # Vim 설정
+├── dot_zshrc                              # Zsh 설정
+├── run_once_01_macos-setting.sh.tmpl      # macOS 설정
+├── run_once_02_install-brewfile.sh.tmpl   # Homebrew 설치
+├── run_once_03_clone-github.sh.tmpl       # GitHub 복제
+├── run_once_04_ohmyzsh-setting.sh         # Oh My Zsh 설정
+├── run_once_05_install-runtime-base.sh    # 런타임 설치
+├── run_once_06_install-ai-npm.sh          # AI CLI (npm) 설치
+├── run_once_07_install-ai-pipx.sh         # AI CLI (pipx) 설치
+├── run_once_08_install-ai-others.sh       # 기타 AI 도구 설치
+└── run_once_99_validate-installation.sh   # 설치 검증
+```
+
+## 설치 방법
+
+### 전제 조건
+- macOS (Tahoe 또는 이후 버전)
+- Homebrew 설치 필요
+
+### 설치 단계
+
+1. **Homebrew 환경 변수 설정**:
+```bash
+echo >> ~/.zprofile
+if [[ $(uname -m) == 'arm64' ]]; then
+  HOMEBREW_PATH="/opt/homebrew/bin"
+else
+  HOMEBREW_PATH="/usr/local/bin"
+fi
+echo "eval \"\$($HOMEBREW_PATH/brew shellenv)\"" >> ~/.zprofile
+eval "\$($HOMEBREW_PATH/brew shellenv)"
+```
+
+2. **Chezmoi 설치 및 적용**:
+```bash
+brew install chezmoi
+chezmoi init kimchanhyung98
+chezmoi apply
+```
+
+3. **자동 실행**:
+- chezmoi가 `run_once_*.sh` 스크립트를 순서대로 자동 실행
+- 각 스크립트는 한 번만 실행됨 (멱등성 보장)
+
+## 주요 기능
+
+### 개발 환경
+- **다중 언어 지원**: Python, Go, Rust, Node.js, Ruby, PHP, Java, .NET
+- **버전 관리**: pyenv, rbenv 통합
+- **패키지 관리자**: pip, npm, yarn, composer, cargo
+
+### AI 도구 통합
+- **Claude Code**: Anthropic의 AI 코딩 어시스턴트
+- **OpenAI Codex**: OpenAI의 코드 생성 도구
+- **Gemini CLI**: Google의 AI CLI
+- **Auggie**: Augment Code의 AI 도구
+- **SuperClaude/SuperGemini**: 향상된 AI 인터페이스
+
+### Shell 최적화
+- **자동 완성**: zsh-autosuggestions
+- **구문 강조**: zsh-syntax-highlighting
+- **히스토리 관리**: 중복 제거, 공유, 검증
+- **플러그인 에코시스템**: Oh My Zsh 기반
+
+### Git 워크플로우
+- **VSCode 통합**: merge/diff 도구
+- **유용한 별칭**: 간결한 명령어 (st, lg, cleanup)
+- **컬러 테마**: 가독성 향상
+- **LFS 지원**: 대용량 파일 관리
+
+## 수정 가이드
+
+### 새 패키지 추가
+1. `Brewfile`에 패키지 추가
+2. `chezmoi apply` 실행하거나 `brew bundle install` 수동 실행
+
+### Shell 별칭 추가
+1. `dot_zshrc` 또는 `dot_bashrc` 편집
+2. `chezmoi apply` 실행
+
+### macOS 설정 변경
+1. `.macos` 스크립트 수정
+2. `chezmoi apply` 후 시스템 재시작
+
+### 새 자동 설치 스크립트 추가
+1. `run_once_XX_description.sh` 형식으로 파일 생성
+2. 실행 권한 부여 (`chmod +x`)
+3. 검증 로직을 `run_once_99_validate-installation.sh`에 추가
+
+### Git 설정 변경
+1. `dot_gitconfig.tmpl` 편집
+2. 사용자 정보는 `.chezmoi.toml.tmpl`에서 관리
+
+## 검증 및 테스트
+
+설치 후 검증:
+```bash
+~/.local/share/chezmoi/run_once_99_validate-installation.sh
+```
+
+출력 예시:
+```
+[ok] cmd:pipx
+[ok] cmd:bun
+[ok] cmd:auggie
+[ok] cmd:claude
+[ok] cmd:codex
+[ok] cmd:gemini
+[ok] cmd:SuperClaude
+[ok] cmd:SuperGemini
+[ok] dir:~/.oh-my-zsh
+[ok] github-dir:/Users/kimchanhyung98/Documents/GitHub
+```
+
+## 특수 디렉토리
+
+- **~/Documents/GitHub**: GitHub 저장소 복제 위치
+- **~/opcode**: Claudia (Claude Code GUI) 관련 디렉토리
+- **~/.oh-my-zsh**: Oh My Zsh 설치 위치
+- **~/.local/bin**: 로컬 실행 파일
+- **~/.bun**: Bun 런타임
+- **~/.cargo**: Rust 도구
+- **~/go**: Go 작업 공간
+
+## 주의사항
+
+### 템플릿 파일
+`.tmpl` 확장자를 가진 파일은 chezmoi 템플릿:
+- `.chezmoi.toml.tmpl`: 사용자 정보 입력 프롬프트
+- `dot_gitconfig.tmpl`: Git 사용자 정보 주입
+- `run_once_*.sh.tmpl`: 설치 스크립트에 변수 주입
+
+### 멱등성
+모든 `run_once_*.sh` 스크립트는 멱등성을 보장:
+- 이미 설치된 도구는 건너뜀
+- 오류 허용 (`|| true` 사용)
+- 조건부 설치 체크
+
+### 오류 처리
+- AI CLI 로그인 실패는 무시됨 (수동 로그인 필요)
+- 검증 스크립트는 [ng] 표시로 실패 항목 표시
+
+## 추가 리소스
+
+- **Chezmoi 문서**: https://www.chezmoi.io
+- **Oh My Zsh**: https://ohmyz.sh
+- **Homebrew**: https://brew.sh
+- **Repository**: https://github.com/kimchanhyung98/dotfiles
+
+## AI 어시스턴트를 위한 컨텍스트
+
+### 자주 묻는 작업
+
+**패키지 추가**:
+```bash
+# Brewfile 편집 후
+chezmoi apply
+```
+
+**설정 변경**:
+```bash
+# dot_* 파일 편집 후
+chezmoi apply
+```
+
+**스크립트 디버깅**:
+```bash
+# 스크립트 직접 실행 (chezmoi 외부)
+bash -x run_once_XX_script.sh
+```
+
+**설치 검증**:
+```bash
+~/.local/share/chezmoi/run_once_99_validate-installation.sh
+```
+
+### 일반적인 문제 해결
+
+**AI CLI 로그인 실패**:
+- 각 도구별 수동 로그인 필요
+- `claude login`, `codex login`, `gemini` 등
+
+**Oh My Zsh 플러그인 오류**:
+- 플러그인 디렉토리 확인: `~/.oh-my-zsh/custom/plugins/`
+- 재설치: `run_once_04_ohmyzsh-setting.sh` 재실행
+
+**Homebrew 경로 문제**:
+- Apple Silicon: `/opt/homebrew/bin`
+- Intel: `/usr/local/bin`
+- `.zprofile`에서 환경 변수 확인
+
+**검증 실패**:
+- `[ng]` 표시된 항목 확인
+- 해당 스크립트 재실행 또는 수동 설치
+
+### 코드 스타일
+
+- **Shell 스크립트**: `set -e` 사용, 오류 허용 (`|| true`)
+- **Git 별칭**: 짧고 직관적 (st, lg, cleanup)
+- **주석**: 한글 사용 가능, 명확한 설명
+- **들여쓰기**: 2 spaces (shell), 4 spaces (vim)

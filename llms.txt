@@ -1,0 +1,279 @@
+# kimchanhyung98/dotfiles
+
+> macOS dotfiles managed with chezmoi
+
+## 프로젝트 개요
+
+macOS 개발 환경을 자동으로 구성하고 관리하는 dotfiles 저장소입니다.
+chezmoi를 사용하여 설정 파일들을 관리하고, 자동화된 스크립트를 통해 개발 환경을 일관되게 유지합니다.
+
+## 파일 구조
+
+```
+dotfiles/
+├── CLAUDE.md                              # Claude Code 프로젝트 지침
+├── llms.txt                               # AI 어시스턴트용 프로젝트 컨텍스트
+├── dot_claude/                            # Claude Code 전역 설정
+│   ├── settings.json                      # 플러그인 및 사용자 설정
+│   └── CLAUDE.md                          # 전역 프롬프트 지침
+├── run_once_06_install-claude.sh.tmpl     # Claude Code 설치 스크립트
+├── docs/                                  # 프로젝트 문서
+│   ├── README.md                          # 문서 인덱스
+│   ├── chezmoi-basics.md                  # chezmoi 기본 사용법
+│   ├── file-naming-conventions.md         # 파일 명명 규칙
+│   ├── template-syntax.md                 # Go 템플릿 문법
+│   ├── lifecycle-scripts.md               # 라이프사이클 스크립트
+│   ├── project-structure.md               # 프로젝트 구조
+│   ├── required.md                        # 패키지 인덱스
+│   └── req/                               # 패키지별 상세 문서
+│       ├── prerequisites.md               # 사전 요구사항
+│       ├── brew-system.md                 # 시스템 도구
+│       ├── brew-languages.md              # 프로그래밍 언어
+│       ├── brew-devtools.md               # 개발 도구
+│       ├── brew-apps.md                   # GUI 애플리케이션
+│       ├── runtime.md                     # 런타임 환경
+│       ├── claude.md                      # Claude Code 설정
+│       ├── ai-tools.md                    # AI 도구 (Claude 제외)
+│       └── macos.md                       # macOS 설정
+└── _/                                     # 기존 dotfiles (이동됨)
+    ├── Brewfile                           # Homebrew 패키지 목록
+    ├── .chezmoi.toml.tmpl                 # chezmoi 설정
+    ├── dot_bashrc                         # Bash 설정
+    ├── dot_gitconfig.tmpl                 # Git 설정 템플릿
+    ├── dot_gitignore_global               # 전역 Git 무시 파일
+    ├── dot_vimrc                          # Vim 설정
+    ├── dot_zshrc                          # Zsh 설정
+    ├── .macos                             # macOS 시스템 설정
+    └── run_once_*.sh*                     # 자동 설치 스크립트
+```
+
+## 핵심 구성 요소
+
+### 1. Claude Code 설정 (dot_claude/)
+
+**settings.json**:
+- 한국어 언어 설정
+- 12개 권장 플러그인 활성화
+- claude-plugins-official, superpowers-marketplace, anthropic-agent-skills
+
+**CLAUDE.md (전역 프롬프트)**:
+- 한국어 응답, 기술 용어 원어 유지
+- ESLint/Prettier 규칙 준수
+- 커밋 메시지 형식: `type: description`
+- 보안 규칙 (API 키, 비밀번호 노출 금지)
+
+**설치 스크립트 (run_once_06_install-claude.sh.tmpl)**:
+- Claude Code npm 설치
+- SuperClaude pipx 설치
+- MCP 서버 설정 (context7, sequential-thinking)
+
+### 2. 패키지 관리 (_/Brewfile)
+
+| 카테고리 | 패키지 수 | 주요 항목 |
+|----------|-----------|-----------|
+| 시스템 도구 | 10 | bash, zsh, curl, wget, gh, gnupg, grep, tmux, tree |
+| 프로그래밍 언어 | 10 | node, python, go, rust, ruby, php, openjdk, dotnet, kotlin |
+| 개발 도구 | 14 | git, vim, awscli, gcloud-cli, composer, pipx, uv |
+| GUI 앱 | 15 | docker, iterm2, figma, postman, chrome, rectangle |
+
+### 3. Shell 설정
+
+**Zsh (_/dot_zshrc)**:
+- Oh My Zsh 프레임워크 (robbyrussell 테마)
+- 플러그인: git, brew, macos, docker, node, python, rust, golang
+- zsh-autosuggestions, zsh-syntax-highlighting
+- History: 10000 라인, 중복 제거, 공유 모드
+
+**Bash (_/dot_bashrc)**:
+- 기본 PATH 설정 및 Homebrew 통합
+- 기본 별칭 (ll, la, grep 컬러)
+
+### 4. Git 설정 (_/dot_gitconfig.tmpl)
+
+- 사용자 정보 템플릿 (name, email)
+- 기본 브랜치: main
+- VSCode merge/diff 도구
+- 별칭: st, lg, cleanup 등
+
+### 5. macOS 설정 (_/.macos)
+
+| 영역 | 설정 |
+|------|------|
+| Dock | 자동 숨기기, 48px 아이콘, 64px 확대 |
+| Finder | 경로/상태 막대, 전체 경로, 확장자 표시 |
+| Keyboard | 빠른 키 반복, 자동 수정 비활성화 |
+| Trackpad | 탭하여 클릭 |
+| Screenshots | Desktop, PNG, 그림자 없음 |
+
+### 6. 자동 설치 스크립트 순서
+
+```
+run_once_01_macos-setting.sh     → Xcode, macOS 설정
+run_once_02_install-brewfile.sh  → Homebrew 패키지
+run_once_03_clone-github.sh      → GitHub 저장소 복제
+run_once_04_ohmyzsh-setting.sh   → Oh My Zsh 설치
+run_once_05_install-runtime.sh   → Bun 런타임
+run_once_06_install-claude.sh    → Claude Code, MCP, 플러그인
+run_once_07_install-ai-npm.sh    → npm AI 도구 (auggie, codex, gemini)
+run_once_08_install-ai-pipx.sh   → pipx AI 도구 (SuperGemini)
+run_once_09_install-ai-others.sh → 기타 AI 도구 (ollama, opcode)
+run_once_99_validate.sh          → 설치 검증
+```
+
+### 7. AI 도구 통합
+
+| 도구 | 설치 방법 | 용도 |
+|------|-----------|------|
+| Claude Code | npm | Anthropic AI CLI |
+| SuperClaude | pipx | Claude 확장 프레임워크 |
+| Codex | npm | OpenAI 코드 생성 |
+| Gemini | npm | Google AI CLI |
+| Auggie | npm | Augment Code AI |
+| SuperGemini | pipx | Gemini 확장 |
+| ollama | brew | 로컬 LLM |
+
+## 설치 방법
+
+### 전제 조건
+- macOS (Ventura 이상)
+- Xcode Command Line Tools
+
+### 빠른 설치
+
+```bash
+# 1. Homebrew 설치
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# 2. 환경 변수 (Apple Silicon)
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# 3. chezmoi 설치 및 적용
+brew install chezmoi
+chezmoi init kimchanhyung98
+chezmoi apply
+```
+
+### 자동 실행 순서
+1. chezmoi가 `run_once_*.sh` 스크립트를 번호 순서대로 자동 실행
+2. 각 스크립트는 한 번만 실행됨 (멱등성 보장)
+3. 실패 시 `|| true`로 다음 단계 진행
+
+## 문서 참조
+
+### chezmoi 문법
+- [chezmoi-basics.md](docs/chezmoi-basics.md) - 기본 사용법
+- [file-naming-conventions.md](docs/file-naming-conventions.md) - 파일 명명 규칙
+- [template-syntax.md](docs/template-syntax.md) - Go 템플릿 문법
+- [lifecycle-scripts.md](docs/lifecycle-scripts.md) - 스크립트 실행 순서
+
+### 패키지 설치
+- [required.md](docs/required.md) - 전체 패키지 인덱스
+- [claude.md](docs/req/claude.md) - Claude Code 상세 설정
+- [ai-tools.md](docs/req/ai-tools.md) - AI 도구 (Claude 제외)
+
+## 수정 가이드
+
+### 새 패키지 추가
+```bash
+# 1. Brewfile 편집
+vim _/Brewfile
+
+# 2. 적용
+chezmoi apply
+# 또는
+brew bundle install --file=_/Brewfile
+```
+
+### Claude 플러그인 추가
+```bash
+# Claude Code 세션 내에서
+/plugin marketplace add <org/repo>
+/plugin install <plugin-name>@<source>
+```
+
+### MCP 서버 추가
+```bash
+claude mcp add <name> -s user -- <command>
+```
+
+### 새 자동 설치 스크립트 추가
+1. `run_once_XX_description.sh` 형식으로 파일 생성
+2. 실행 권한 부여 (`chmod +x`)
+3. 검증 로직을 `run_once_99_validate-installation.sh`에 추가
+
+## 검증
+
+```bash
+# 설치 검증 실행
+~/.local/share/chezmoi/run_once_99_validate-installation.sh
+```
+
+## 특수 디렉토리
+
+| 경로 | 용도 |
+|------|------|
+| ~/Documents/GitHub | GitHub 저장소 복제 위치 |
+| ~/opcode | Opcode (Claudia) 디렉토리 |
+| ~/.oh-my-zsh | Oh My Zsh 설치 위치 |
+| ~/.claude | Claude Code 설정 |
+| ~/.bun | Bun 런타임 |
+| ~/.cargo | Rust 도구 |
+| ~/go | Go 작업 공간 |
+
+## AI 어시스턴트를 위한 컨텍스트
+
+### 자주 묻는 작업
+
+**Claude 플러그인 설치**:
+```bash
+/plugin marketplace add claude-plugins-official
+/plugin install context7@claude-plugins-official
+```
+
+**MCP 서버 추가**:
+```bash
+claude mcp add sequential-thinking -s user -- npx -y @modelcontextprotocol/server-sequential-thinking
+```
+
+**설정 변경**:
+```bash
+# dot_* 파일 편집 후
+chezmoi apply
+```
+
+### 일반적인 문제 해결
+
+**Claude 로그인 실패**:
+```bash
+claude logout
+claude login
+```
+
+**플러그인 문제**:
+```bash
+/plugin remove <name>
+/plugin install <name>
+```
+
+**MCP 서버 문제**:
+```bash
+claude mcp list
+claude mcp remove <name>
+claude mcp add <name> -s user -- <command>
+```
+
+### 코드 스타일
+
+- **Shell 스크립트**: `set -e` 사용, 오류 허용 (`|| true`)
+- **Git 별칭**: 짧고 직관적 (st, lg, cleanup)
+- **주석**: 한글 사용 가능, 명확한 설명
+- **들여쓰기**: 2 spaces (shell), 4 spaces (vim)
+
+## 추가 리소스
+
+- **Chezmoi 문서**: https://www.chezmoi.io
+- **Claude Code**: https://code.claude.com/docs
+- **SuperClaude**: https://github.com/SuperClaude-Org/SuperClaude_Framework
+- **Oh My Zsh**: https://ohmyz.sh
+- **Homebrew**: https://brew.sh
+- **Repository**: https://github.com/kimchanhyung98/dotfiles
