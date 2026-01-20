@@ -268,6 +268,52 @@ cp ~/.claude/settings.local.json ~/.claude/settings.local.json.backup
 
 ---
 
+## Everything Claude Code
+
+프로덕션 검증된 Claude Code 설정 모음 (agents, skills, commands, rules)
+
+### 간편 설치
+
+```bash
+# 1. 임시 디렉토리에 클론
+git clone https://github.com/affaan-m/everything-claude-code.git /tmp/everything-claude-code
+
+# 2. 필요한 설정 복사
+cd /tmp/everything-claude-code
+cp -r agents ~/.claude/
+cp -r skills ~/.claude/
+cp -r commands ~/.claude/
+cp -r rules ~/.claude/
+
+# 3. 정리
+cd ~ && rm -rf /tmp/everything-claude-code
+
+echo "✓ Everything Claude Code 설치 완료"
+```
+
+### 선택적 설치
+
+필요한 것만 선택해서 설치:
+
+```bash
+# Agents만 설치 (코드 리뷰, 테스팅 등)
+cp -r /tmp/everything-claude-code/agents ~/.claude/
+
+# Skills만 설치 (TDD, 백엔드/프론트엔드 패턴)
+cp -r /tmp/everything-claude-code/skills ~/.claude/
+
+# Commands만 설치 (/tdd, /plan, /code-review 등)
+cp -r /tmp/everything-claude-code/commands ~/.claude/
+
+# Rules만 설치 (보안, 코딩 스타일, 테스팅 규칙)
+cp -r /tmp/everything-claude-code/rules ~/.claude/
+```
+
+**공식 레포지토리:**
+- [GitHub](https://github.com/affaan-m/everything-claude-code)
+
+---
+
 ## 전역 프롬프트 (CLAUDE.md)
 
 ### 파일 위치
