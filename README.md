@@ -1,6 +1,8 @@
-# github.com/kimchanhyung98/dotfiles
+# deprecated
 
-kimchanhyung98 macOS Tahoe dotfiles, managed with [`chezmoi`](https://www.chezmoi.io).
+This repository is no longer maintained. Please refer to [kimchanhyung98/dotfiles](https://github.com/kimchanhyung98/dotfiles).
+
+---
 
 1. Install Homebrew and Set Environment Variables:
 
